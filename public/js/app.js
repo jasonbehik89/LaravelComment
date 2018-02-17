@@ -47136,10 +47136,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            comment: {
+            comment: [],
+            comment_box: {
                 name: '',
                 message: '',
                 parent_id: ''
+            },
+            data: {
+                'level1': [],
+                'level2': []
             },
             errors: []
         };
@@ -47153,19 +47158,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             axios.get('/comment').then(function (response) {
+                var mythis = _this;
+                for (var x in response.data.comment) {
+                    mythis.data['level1'][x] = { 'name': '', 'message': '' };
+                    for (var y in response.data.comment[x].level2) {
+                        mythis.data['level2'][y] = { 'name': '', 'message': '' };
+                    }
+                }
                 _this.comment = response.data.comment;
             });
         },
-        showCommentBox: function showCommentBox(elem, parent_id) {
-            console.log(elem);
-            var comment_box = $(".comment-box");
-            //$(".comment-box")
-        },
-        createComment: function createComment(parent_id) {
+        createComment: function createComment(parent_id, level, index) {
             var mythis = this;
             axios.post('/comment', {
-                name: this.comment.name,
-                message: this.comment.message,
+                name: level == null ? mythis.comment_box.name : mythis.data[level][index]['name'],
+                message: level == null ? mythis.comment_box.message : mythis.data[level][index]['message'],
                 parent_id: parent_id
             }).then(function (response) {
                 mythis.initComments();
@@ -47316,13 +47323,20 @@ var render = function() {
                                               {
                                                 name: "model",
                                                 rawName: "v-model",
-                                                value: _vm.comment.name,
-                                                expression: "comment.name"
+                                                value:
+                                                  _vm.data["level2"][
+                                                    level2_index
+                                                  ]["name"],
+                                                expression:
+                                                  "data['level2'][level2_index]['name']"
                                               }
                                             ],
-                                            attrs: { type: "text" },
+                                            attrs: { type: "text", value: "" },
                                             domProps: {
-                                              value: _vm.comment.name
+                                              value:
+                                                _vm.data["level2"][
+                                                  level2_index
+                                                ]["name"]
                                             },
                                             on: {
                                               input: function($event) {
@@ -47330,7 +47344,9 @@ var render = function() {
                                                   return
                                                 }
                                                 _vm.$set(
-                                                  _vm.comment,
+                                                  _vm.data["level2"][
+                                                    level2_index
+                                                  ],
                                                   "name",
                                                   $event.target.value
                                                 )
@@ -47390,12 +47406,20 @@ var render = function() {
                                               {
                                                 name: "model",
                                                 rawName: "v-model",
-                                                value: _vm.comment.message,
-                                                expression: "comment.message"
+                                                value:
+                                                  _vm.data["level2"][
+                                                    level2_index
+                                                  ]["message"],
+                                                expression:
+                                                  "data['level2'][level2_index]['message']"
                                               }
                                             ],
+                                            attrs: { text: "" },
                                             domProps: {
-                                              value: _vm.comment.message
+                                              value:
+                                                _vm.data["level2"][
+                                                  level2_index
+                                                ]["message"]
                                             },
                                             on: {
                                               input: function($event) {
@@ -47403,7 +47427,9 @@ var render = function() {
                                                   return
                                                 }
                                                 _vm.$set(
-                                                  _vm.comment,
+                                                  _vm.data["level2"][
+                                                    level2_index
+                                                  ],
                                                   "message",
                                                   $event.target.value
                                                 )
@@ -47459,7 +47485,9 @@ var render = function() {
                                               on: {
                                                 click: function($event) {
                                                   _vm.createComment(
-                                                    item_level2.id
+                                                    item_level2.id,
+                                                    "level2",
+                                                    level2_index
                                                   )
                                                 }
                                               }
@@ -47515,19 +47543,23 @@ var render = function() {
                                 {
                                   name: "model",
                                   rawName: "v-model",
-                                  value: _vm.comment.name,
-                                  expression: "comment.name"
+                                  value:
+                                    _vm.data["level1"][level1_index]["name"],
+                                  expression:
+                                    "data['level1'][level1_index]['name']"
                                 }
                               ],
                               attrs: { type: "text" },
-                              domProps: { value: _vm.comment.name },
+                              domProps: {
+                                value: _vm.data["level1"][level1_index]["name"]
+                              },
                               on: {
                                 input: function($event) {
                                   if ($event.target.composing) {
                                     return
                                   }
                                   _vm.$set(
-                                    _vm.comment,
+                                    _vm.data["level1"][level1_index],
                                     "name",
                                     $event.target.value
                                   )
@@ -47567,18 +47599,23 @@ var render = function() {
                                 {
                                   name: "model",
                                   rawName: "v-model",
-                                  value: _vm.comment.message,
-                                  expression: "comment.message"
+                                  value:
+                                    _vm.data["level1"][level1_index]["message"],
+                                  expression:
+                                    "data['level1'][level1_index]['message']"
                                 }
                               ],
-                              domProps: { value: _vm.comment.message },
+                              domProps: {
+                                value:
+                                  _vm.data["level1"][level1_index]["message"]
+                              },
                               on: {
                                 input: function($event) {
                                   if ($event.target.composing) {
                                     return
                                   }
                                   _vm.$set(
-                                    _vm.comment,
+                                    _vm.data["level1"][level1_index],
                                     "message",
                                     $event.target.value
                                   )
@@ -47614,7 +47651,11 @@ var render = function() {
                                   attrs: { type: "button" },
                                   on: {
                                     click: function($event) {
-                                      _vm.createComment(item.id)
+                                      _vm.createComment(
+                                        item.id,
+                                        "level1",
+                                        level1_index
+                                      )
                                     }
                                   }
                                 },
@@ -47647,18 +47688,18 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.comment.name,
-                          expression: "comment.name"
+                          value: _vm.comment_box.name,
+                          expression: "comment_box.name"
                         }
                       ],
                       attrs: { type: "text" },
-                      domProps: { value: _vm.comment.name },
+                      domProps: { value: _vm.comment_box.name },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
-                          _vm.$set(_vm.comment, "name", $event.target.value)
+                          _vm.$set(_vm.comment_box, "name", $event.target.value)
                         }
                       }
                     }),
@@ -47689,17 +47730,21 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.comment.message,
-                          expression: "comment.message"
+                          value: _vm.comment_box.message,
+                          expression: "comment_box.message"
                         }
                       ],
-                      domProps: { value: _vm.comment.message },
+                      domProps: { value: _vm.comment_box.message },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
-                          _vm.$set(_vm.comment, "message", $event.target.value)
+                          _vm.$set(
+                            _vm.comment_box,
+                            "message",
+                            $event.target.value
+                          )
                         }
                       }
                     }),
@@ -47726,7 +47771,7 @@ var render = function() {
                           attrs: { type: "button" },
                           on: {
                             click: function($event) {
-                              _vm.createComment(null)
+                              _vm.createComment(null, null, null)
                             }
                           }
                         },

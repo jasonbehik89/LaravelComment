@@ -22,7 +22,7 @@
                                     <div class="comment-box col-md-5">
                                         <div class="col-md-12 form-group">
                                             <label for="name" class="col-md-4 control-label">Name: </label>
-                                            <input type="text" v-model="comment.name">
+                                            <input type="text" v-model="data['level2'][level2_index]['name']" value="">
                                             <div class="alert alert-danger" v-if="errors.length > 0 && 'name' in errors[0] && errors[0].name.length > 0">
                                                 <ul class="list-unstyled">
                                                     <li>{{ errors[0].name[0] }}</li>
@@ -31,7 +31,7 @@
                                         </div>
                                         <div class="col-md-12 form-group">
                                             <label for="message" class="col-md-4 control-label">Message: </label>
-                                            <textarea v-model="comment.message"></textarea>
+                                            <textarea v-model="data['level2'][level2_index]['message']" text=""></textarea>
                                             <div class="alert alert-danger" v-if="errors.length > 0 && 'message' in errors[0] && errors[0].message.length > 0">
                                                 <ul class="list-unstyled">
                                                     <li>{{ errors[0].message[0] }}</li>
@@ -39,7 +39,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12 form-group text-right">
-                                            <button type="button" @click="createComment(item_level2.id)" class="btn btn-primary">Submit</button>
+                                            <button type="button" @click="createComment(item_level2.id,'level2',level2_index)" class="btn btn-primary">Submit</button>
                                         </div>
                                     </div>
                                 </div>
@@ -49,7 +49,7 @@
                                 <div class="comment-box col-md-4">
                                     <div class="col-md-12 form-group">
                                         <label for="name" class="col-md-4 control-label">Name: </label>
-                                        <input type="text" v-model="comment.name">
+                                        <input type="text" v-model="data['level1'][level1_index]['name']">
                                         <div class="alert alert-danger" v-if="errors.length > 0 && 'name' in errors[0] && errors[0].name.length > 0">
                                             <ul class="list-unstyled">
                                                 <li>{{ errors[0].name[0] }}</li>
@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="col-md-12 form-group">
                                         <label for="message" class="col-md-4 control-label">Message: </label>
-                                        <textarea v-model="comment.message"></textarea>
+                                        <textarea v-model="data['level1'][level1_index]['message']"></textarea>
                                         <div class="alert alert-danger" v-if="errors.length > 0 && 'message' in errors[0] && errors[0].message.length > 0">
                                             <ul class="list-unstyled">
                                                 <li>{{ errors[0].message[0] }}</li>
@@ -66,7 +66,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12 form-group text-right">
-                                        <button type="button" @click="createComment(item.id)" class="btn btn-primary">Submit</button>
+                                        <button type="button" @click="createComment(item.id,'level1',level1_index)" class="btn btn-primary">Submit</button>
                                     </div>
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
                             <div class="comment-box col-md-4">
                                 <div class="col-md-12 form-group">
                                     <label for="name" class="col-md-4 control-label">Name: </label>
-                                    <input type="text" v-model="comment.name">
+                                    <input type="text" v-model="comment_box.name">
                                     <div class="alert alert-danger" v-if="errors.length > 0 && 'name' in errors[0] && errors[0].name.length > 0">
                                         <ul class="list-unstyled">
                                             <li>{{ errors[0].name[0] }}</li>
@@ -84,7 +84,7 @@
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label for="message" class="col-md-4 control-label">Message: </label>
-                                    <textarea v-model="comment.message"></textarea>
+                                    <textarea v-model="comment_box.message"></textarea>
                                     <div class="alert alert-danger" v-if="errors.length > 0 && 'message' in errors[0] && errors[0].message.length > 0">
                                         <ul class="list-unstyled">
                                             <li>{{ errors[0].message[0] }}</li>
@@ -92,7 +92,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12 form-group text-right">
-                                    <button type="button" @click="createComment(null)" class="btn btn-primary">Submit</button>
+                                    <button type="button" @click="createComment(null, null, null)" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>
                         </div>
@@ -107,10 +107,15 @@
     export default {
         data(){
             return {
-                comment: {
+                comment: [],
+                comment_box: {
                     name: '',
                     message: '',
                     parent_id: ''
+                },
+                data: {
+                    'level1': [],
+                    'level2': []
                 },
                 errors: []
             }
@@ -121,14 +126,21 @@
         methods: {
             initComments(){
                 axios.get('/comment').then(response => {
+                    var mythis = this;
+                    for(var x in response.data.comment){
+                        mythis.data['level1'][x] = {'name': '', 'message': ''};
+                        for(var y in response.data.comment[x].level2){
+                            mythis.data['level2'][y] = {'name': '', 'message': ''};
+                        }
+                    }
                     this.comment = response.data.comment;
                 });
             },
-            createComment(parent_id){
+            createComment(parent_id, level, index){
                 var mythis = this;
                 axios.post('/comment', {
-                    name: this.comment.name,
-                    message: this.comment.message,
+                    name: level == null? mythis.comment_box.name : mythis.data[level][index]['name'],
+                    message: level == null? mythis.comment_box.message : mythis.data[level][index]['message'],
                     parent_id: parent_id
                 })
                 .then(response => {
