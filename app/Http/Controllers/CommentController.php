@@ -56,7 +56,7 @@ class CommentController extends Controller
         $data = $request->all();
         // check if inputs are valid
         $validator = Validator::make($data, [
-            'name'      => 'required|string|max:100',
+            'name'      => 'required|alpha|max:100',
             'message'   => 'required|string',
             'parent_id' => 'numeric|nullable'
         ]);

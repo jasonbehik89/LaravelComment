@@ -47146,7 +47146,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'level1': [],
                 'level2': []
             },
-            errors: []
+            errors_comment_box: [],
+            errors: {
+                'level1': {},
+                'level2': {}
+            }
         };
     },
     mounted: function mounted() {
@@ -47154,6 +47158,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
+        clearData: function clearData(level, index) {
+            if (level) {
+                this.data[level][index]['name'] = '';
+                this.data[level][index]['message'] = '';
+            } else {
+                this.comment_box.name = '';
+                this.comment_box.message = '';
+            }
+        },
+        clearErrors: function clearErrors() {
+            this.errors = {
+                'level1': {},
+                'level2': {}
+            };
+            this.errors_comment_box = [];
+        },
         initComments: function initComments() {
             var _this = this;
 
@@ -47176,10 +47196,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 parent_id: parent_id
             }).then(function (response) {
                 mythis.initComments();
+                mythis.clearData(level);
             }).catch(function (error) {
-                mythis.errors = [];
+                mythis.clearErrors();
                 if (error.response && error.response.status === 400) {
-                    mythis.errors.push(error.response.data.messages);
+                    if (!level) mythis.errors_comment_box.push(error.response.data.messages);else {
+                        mythis.errors[level]['i' + index] = [];
+                        mythis.errors[level]['i' + index].push(error.response.data.messages);
+                    }
                 }
             });
         }
@@ -47205,585 +47229,599 @@ var render = function() {
           _c(
             "div",
             { staticClass: "card-block" },
-            [
-              _vm._l(_vm.comment, function(item, level1_index) {
-                return _c(
-                  "div",
-                  { staticClass: "p-2 level1 card" },
-                  [
-                    _c(
-                      "div",
-                      { staticClass: "name font-weight-bold card-header" },
-                      [_vm._v(_vm._s(item.name))]
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "message card-block pl-3" }, [
-                      _vm._v(_vm._s(item.message))
-                    ]),
-                    _vm._v(" "),
-                    _vm._l(item.level2, function(item_level2, level2_index) {
-                      return item.level2 != null
-                        ? _c(
-                            "div",
-                            { staticClass: "level2 p-2 ml-3 card" },
-                            [
-                              _c(
-                                "div",
-                                {
-                                  staticClass:
-                                    "name font-weight-bold card-header"
-                                },
-                                [_vm._v(_vm._s(item_level2.name))]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "message card-block pl-3" },
-                                [_vm._v(_vm._s(item_level2.message))]
-                              ),
-                              _vm._v(" "),
-                              _vm._l(item_level2.level3, function(item_level3) {
-                                return item_level2.level3 != null
-                                  ? _c(
-                                      "div",
-                                      { staticClass: "level3 p-2 ml-3 card" },
-                                      [
-                                        _c(
-                                          "div",
-                                          {
-                                            staticClass:
-                                              "name font-weight-bold card-header"
-                                          },
-                                          [_vm._v(_vm._s(item_level3.name))]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "div",
-                                          {
-                                            staticClass:
-                                              "message card-block pl-3"
-                                          },
-                                          [_vm._v(_vm._s(item_level3.message))]
-                                        )
-                                      ]
-                                    )
-                                  : _vm._e()
-                              }),
-                              _vm._v(" "),
-                              _c("span", [
-                                _c(
-                                  "a",
-                                  {
-                                    attrs: {
-                                      href:
-                                        "#collapseCommentBox" +
-                                        level1_index +
-                                        level2_index,
-                                      "data-toggle": "collapse",
-                                      "aria-expanded": "false"
-                                    }
-                                  },
-                                  [_vm._v("Comment")]
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
-                                  staticClass:
-                                    "collapse border rounded p-2 col-md-12",
-                                  attrs: {
-                                    id:
-                                      "collapseCommentBox" +
-                                      level1_index +
-                                      level2_index
-                                  }
-                                },
-                                [
-                                  _c(
+            _vm._l(_vm.comment, function(item, level1_index) {
+              return _c(
+                "div",
+                { staticClass: "m-2 p-2 level1 card" },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "name font-weight-bold card-header" },
+                    [_vm._v(_vm._s(item.name))]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "message card-block pl-3" }, [
+                    _vm._v(_vm._s(item.message))
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(item.level2, function(item_level2, level2_index) {
+                    return item.level2 != null
+                      ? _c(
+                          "div",
+                          { staticClass: "level2 p-2 ml-3 card" },
+                          [
+                            _c(
+                              "div",
+                              {
+                                staticClass: "name font-weight-bold card-header"
+                              },
+                              [_vm._v(_vm._s(item_level2.name))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "message card-block pl-3" },
+                              [_vm._v(_vm._s(item_level2.message))]
+                            ),
+                            _vm._v(" "),
+                            _vm._l(item_level2.level3, function(item_level3) {
+                              return item_level2.level3 != null
+                                ? _c(
                                     "div",
-                                    { staticClass: "comment-box col-md-5" },
+                                    { staticClass: "level3 p-2 ml-3 card" },
                                     [
                                       _c(
                                         "div",
-                                        { staticClass: "col-md-12 form-group" },
-                                        [
-                                          _c(
-                                            "label",
-                                            {
-                                              staticClass:
-                                                "col-md-4 control-label",
-                                              attrs: { for: "name" }
-                                            },
-                                            [_vm._v("Name: ")]
-                                          ),
-                                          _vm._v(" "),
-                                          _c("input", {
-                                            directives: [
-                                              {
-                                                name: "model",
-                                                rawName: "v-model",
-                                                value:
-                                                  _vm.data["level2"][
-                                                    level2_index
-                                                  ]["name"],
-                                                expression:
-                                                  "data['level2'][level2_index]['name']"
-                                              }
-                                            ],
-                                            attrs: { type: "text", value: "" },
-                                            domProps: {
-                                              value:
-                                                _vm.data["level2"][
-                                                  level2_index
-                                                ]["name"]
-                                            },
-                                            on: {
-                                              input: function($event) {
-                                                if ($event.target.composing) {
-                                                  return
-                                                }
-                                                _vm.$set(
-                                                  _vm.data["level2"][
-                                                    level2_index
-                                                  ],
-                                                  "name",
-                                                  $event.target.value
-                                                )
-                                              }
-                                            }
-                                          }),
-                                          _vm._v(" "),
-                                          _vm.errors.length > 0 &&
-                                          "name" in _vm.errors[0] &&
-                                          _vm.errors[0].name.length > 0
-                                            ? _c(
-                                                "div",
-                                                {
-                                                  staticClass:
-                                                    "alert alert-danger"
-                                                },
-                                                [
-                                                  _c(
-                                                    "ul",
-                                                    {
-                                                      staticClass:
-                                                        "list-unstyled"
-                                                    },
-                                                    [
-                                                      _c("li", [
-                                                        _vm._v(
-                                                          _vm._s(
-                                                            _vm.errors[0]
-                                                              .name[0]
-                                                          )
-                                                        )
-                                                      ])
-                                                    ]
-                                                  )
-                                                ]
-                                              )
-                                            : _vm._e()
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "div",
-                                        { staticClass: "col-md-12 form-group" },
-                                        [
-                                          _c(
-                                            "label",
-                                            {
-                                              staticClass:
-                                                "col-md-4 control-label",
-                                              attrs: { for: "message" }
-                                            },
-                                            [_vm._v("Message: ")]
-                                          ),
-                                          _vm._v(" "),
-                                          _c("textarea", {
-                                            directives: [
-                                              {
-                                                name: "model",
-                                                rawName: "v-model",
-                                                value:
-                                                  _vm.data["level2"][
-                                                    level2_index
-                                                  ]["message"],
-                                                expression:
-                                                  "data['level2'][level2_index]['message']"
-                                              }
-                                            ],
-                                            attrs: { text: "" },
-                                            domProps: {
-                                              value:
-                                                _vm.data["level2"][
-                                                  level2_index
-                                                ]["message"]
-                                            },
-                                            on: {
-                                              input: function($event) {
-                                                if ($event.target.composing) {
-                                                  return
-                                                }
-                                                _vm.$set(
-                                                  _vm.data["level2"][
-                                                    level2_index
-                                                  ],
-                                                  "message",
-                                                  $event.target.value
-                                                )
-                                              }
-                                            }
-                                          }),
-                                          _vm._v(" "),
-                                          _vm.errors.length > 0 &&
-                                          "message" in _vm.errors[0] &&
-                                          _vm.errors[0].message.length > 0
-                                            ? _c(
-                                                "div",
-                                                {
-                                                  staticClass:
-                                                    "alert alert-danger"
-                                                },
-                                                [
-                                                  _c(
-                                                    "ul",
-                                                    {
-                                                      staticClass:
-                                                        "list-unstyled"
-                                                    },
-                                                    [
-                                                      _c("li", [
-                                                        _vm._v(
-                                                          _vm._s(
-                                                            _vm.errors[0]
-                                                              .message[0]
-                                                          )
-                                                        )
-                                                      ])
-                                                    ]
-                                                  )
-                                                ]
-                                              )
-                                            : _vm._e()
-                                        ]
+                                        {
+                                          staticClass:
+                                            "name font-weight-bold card-header"
+                                        },
+                                        [_vm._v(_vm._s(item_level3.name))]
                                       ),
                                       _vm._v(" "),
                                       _c(
                                         "div",
                                         {
-                                          staticClass:
-                                            "col-md-12 form-group text-right"
+                                          staticClass: "message card-block pl-3"
                                         },
-                                        [
-                                          _c(
-                                            "button",
-                                            {
-                                              staticClass: "btn btn-primary",
-                                              attrs: { type: "button" },
-                                              on: {
-                                                click: function($event) {
-                                                  _vm.createComment(
-                                                    item_level2.id,
-                                                    "level2",
-                                                    level2_index
-                                                  )
-                                                }
-                                              }
-                                            },
-                                            [_vm._v("Submit")]
-                                          )
-                                        ]
+                                        [_vm._v(_vm._s(item_level3.message))]
                                       )
                                     ]
                                   )
-                                ]
-                              )
-                            ],
-                            2
-                          )
-                        : _vm._e()
-                    }),
-                    _vm._v(" "),
-                    _c("span", [
-                      _c(
-                        "a",
-                        {
-                          attrs: {
-                            href: "#collapseCommentBox" + level1_index,
-                            "data-toggle": "collapse",
-                            "aria-expanded": "false"
-                          }
-                        },
-                        [_vm._v("Comment")]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass: "collapse border rounded p-2 col-md-12",
-                        attrs: { id: "collapseCommentBox" + level1_index }
-                      },
-                      [
-                        _c("div", { staticClass: "comment-box col-md-4" }, [
-                          _c("div", { staticClass: "col-md-12 form-group" }, [
-                            _c(
-                              "label",
-                              {
-                                staticClass: "col-md-4 control-label",
-                                attrs: { for: "name" }
-                              },
-                              [_vm._v("Name: ")]
-                            ),
-                            _vm._v(" "),
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value:
-                                    _vm.data["level1"][level1_index]["name"],
-                                  expression:
-                                    "data['level1'][level1_index]['name']"
-                                }
-                              ],
-                              attrs: { type: "text" },
-                              domProps: {
-                                value: _vm.data["level1"][level1_index]["name"]
-                              },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.data["level1"][level1_index],
-                                    "name",
-                                    $event.target.value
-                                  )
-                                }
-                              }
+                                : _vm._e()
                             }),
                             _vm._v(" "),
-                            _vm.errors.length > 0 &&
-                            "name" in _vm.errors[0] &&
-                            _vm.errors[0].name.length > 0
-                              ? _c(
-                                  "div",
-                                  { staticClass: "alert alert-danger" },
-                                  [
-                                    _c("ul", { staticClass: "list-unstyled" }, [
-                                      _c("li", [
-                                        _vm._v(_vm._s(_vm.errors[0].name[0]))
-                                      ])
-                                    ])
-                                  ]
-                                )
-                              : _vm._e()
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col-md-12 form-group" }, [
-                            _c(
-                              "label",
-                              {
-                                staticClass: "col-md-4 control-label",
-                                attrs: { for: "message" }
-                              },
-                              [_vm._v("Message: ")]
-                            ),
-                            _vm._v(" "),
-                            _c("textarea", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value:
-                                    _vm.data["level1"][level1_index]["message"],
-                                  expression:
-                                    "data['level1'][level1_index]['message']"
-                                }
-                              ],
-                              domProps: {
-                                value:
-                                  _vm.data["level1"][level1_index]["message"]
-                              },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.data["level1"][level1_index],
-                                    "message",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            }),
-                            _vm._v(" "),
-                            _vm.errors.length > 0 &&
-                            "message" in _vm.errors[0] &&
-                            _vm.errors[0].message.length > 0
-                              ? _c(
-                                  "div",
-                                  { staticClass: "alert alert-danger" },
-                                  [
-                                    _c("ul", { staticClass: "list-unstyled" }, [
-                                      _c("li", [
-                                        _vm._v(_vm._s(_vm.errors[0].message[0]))
-                                      ])
-                                    ])
-                                  ]
-                                )
-                              : _vm._e()
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "col-md-12 form-group text-right" },
-                            [
+                            _c("div", { staticClass: "pl-3" }, [
                               _c(
-                                "button",
+                                "a",
                                 {
-                                  staticClass: "btn btn-primary",
-                                  attrs: { type: "button" },
-                                  on: {
-                                    click: function($event) {
-                                      _vm.createComment(
-                                        item.id,
-                                        "level1",
-                                        level1_index
-                                      )
-                                    }
+                                  attrs: {
+                                    href:
+                                      "#collapseCommentBox" +
+                                      level1_index +
+                                      level2_index,
+                                    "data-toggle": "collapse",
+                                    "aria-expanded": "false"
                                   }
                                 },
-                                [_vm._v("Submit")]
+                                [_vm._v("Comment")]
                               )
-                            ]
-                          )
-                        ])
-                      ]
-                    )
-                  ],
-                  2
-                )
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "border rounded p-2 col-md-12" }, [
-                _c("div", { staticClass: "comment-box col-md-4" }, [
-                  _c("div", { staticClass: "col-md-12 form-group" }, [
-                    _c(
-                      "label",
-                      {
-                        staticClass: "col-md-4 control-label",
-                        attrs: { for: "name" }
-                      },
-                      [_vm._v("Name: ")]
-                    ),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.comment_box.name,
-                          expression: "comment_box.name"
-                        }
-                      ],
-                      attrs: { type: "text" },
-                      domProps: { value: _vm.comment_box.name },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.comment_box, "name", $event.target.value)
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.errors.length > 0 &&
-                    "name" in _vm.errors[0] &&
-                    _vm.errors[0].name.length > 0
-                      ? _c("div", { staticClass: "alert alert-danger" }, [
-                          _c("ul", { staticClass: "list-unstyled" }, [
-                            _c("li", [_vm._v(_vm._s(_vm.errors[0].name[0]))])
-                          ])
-                        ])
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "collapse border rounded p-2 col-md-12",
+                                attrs: {
+                                  id:
+                                    "collapseCommentBox" +
+                                    level1_index +
+                                    level2_index
+                                }
+                              },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "comment-box col-md-5" },
+                                  [
+                                    _c(
+                                      "div",
+                                      { staticClass: "col-md-12 form-group" },
+                                      [
+                                        _c(
+                                          "label",
+                                          {
+                                            staticClass:
+                                              "col-md-4 control-label",
+                                            attrs: { for: "name" }
+                                          },
+                                          [_vm._v("Name: ")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value:
+                                                _vm.data["level2"][
+                                                  level2_index
+                                                ]["name"],
+                                              expression:
+                                                "data['level2'][level2_index]['name']"
+                                            }
+                                          ],
+                                          attrs: { type: "text", value: "" },
+                                          domProps: {
+                                            value:
+                                              _vm.data["level2"][level2_index][
+                                                "name"
+                                              ]
+                                          },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                _vm.data["level2"][
+                                                  level2_index
+                                                ],
+                                                "name",
+                                                $event.target.value
+                                              )
+                                            }
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        "i" + level2_index in
+                                          _vm.errors.level2 &&
+                                        _vm.errors.level2["i" + level2_index]
+                                          .length > 0 &&
+                                        "name" in
+                                          _vm.errors.level2[
+                                            "i" + level2_index
+                                          ][0] &&
+                                        _vm.errors.level2[
+                                          "i" + level2_index
+                                        ][0]["name"].length > 0
+                                          ? _c(
+                                              "div",
+                                              {
+                                                staticClass:
+                                                  "alert alert-danger"
+                                              },
+                                              [
+                                                _c(
+                                                  "ul",
+                                                  {
+                                                    staticClass: "list-unstyled"
+                                                  },
+                                                  [
+                                                    _c("li", [
+                                                      _vm._v(
+                                                        _vm._s(
+                                                          _vm.errors.level2[
+                                                            "i" + level2_index
+                                                          ][0]["name"][0]
+                                                        )
+                                                      )
+                                                    ])
+                                                  ]
+                                                )
+                                              ]
+                                            )
+                                          : _vm._e()
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "col-md-12 form-group" },
+                                      [
+                                        _c(
+                                          "label",
+                                          {
+                                            staticClass:
+                                              "col-md-4 control-label",
+                                            attrs: { for: "message" }
+                                          },
+                                          [_vm._v("Message: ")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("textarea", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value:
+                                                _vm.data["level2"][
+                                                  level2_index
+                                                ]["message"],
+                                              expression:
+                                                "data['level2'][level2_index]['message']"
+                                            }
+                                          ],
+                                          attrs: { text: "" },
+                                          domProps: {
+                                            value:
+                                              _vm.data["level2"][level2_index][
+                                                "message"
+                                              ]
+                                          },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                _vm.data["level2"][
+                                                  level2_index
+                                                ],
+                                                "message",
+                                                $event.target.value
+                                              )
+                                            }
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        "i" + level2_index in
+                                          _vm.errors.level2 &&
+                                        _vm.errors.level2["i" + level2_index]
+                                          .length > 0 &&
+                                        "message" in
+                                          _vm.errors.level2[
+                                            "i" + level2_index
+                                          ][0] &&
+                                        _vm.errors.level2[
+                                          "i" + level2_index
+                                        ][0]["message"].length > 0
+                                          ? _c(
+                                              "div",
+                                              {
+                                                staticClass:
+                                                  "alert alert-danger"
+                                              },
+                                              [
+                                                _c(
+                                                  "ul",
+                                                  {
+                                                    staticClass: "list-unstyled"
+                                                  },
+                                                  [
+                                                    _c("li", [
+                                                      _vm._v(
+                                                        _vm._s(
+                                                          _vm.errors.level2[
+                                                            "i" + level2_index
+                                                          ][0]["message"][0]
+                                                        )
+                                                      )
+                                                    ])
+                                                  ]
+                                                )
+                                              ]
+                                            )
+                                          : _vm._e()
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "col-md-12 form-group text-right"
+                                      },
+                                      [
+                                        _c(
+                                          "button",
+                                          {
+                                            staticClass: "btn btn-primary",
+                                            attrs: { type: "button" },
+                                            on: {
+                                              click: function($event) {
+                                                _vm.createComment(
+                                                  item_level2.id,
+                                                  "level2",
+                                                  level2_index
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [_vm._v("Submit")]
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                )
+                              ]
+                            )
+                          ],
+                          2
+                        )
                       : _vm._e()
-                  ]),
+                  }),
                   _vm._v(" "),
-                  _c("div", { staticClass: "col-md-12 form-group" }, [
+                  _c("div", { staticClass: "pl-3" }, [
                     _c(
-                      "label",
+                      "a",
                       {
-                        staticClass: "col-md-4 control-label",
-                        attrs: { for: "message" }
+                        attrs: {
+                          href: "#collapseCommentBox" + level1_index,
+                          "data-toggle": "collapse",
+                          "aria-expanded": "false"
+                        }
                       },
-                      [_vm._v("Message: ")]
-                    ),
-                    _vm._v(" "),
-                    _c("textarea", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.comment_box.message,
-                          expression: "comment_box.message"
-                        }
-                      ],
-                      domProps: { value: _vm.comment_box.message },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.comment_box,
-                            "message",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.errors.length > 0 &&
-                    "message" in _vm.errors[0] &&
-                    _vm.errors[0].message.length > 0
-                      ? _c("div", { staticClass: "alert alert-danger" }, [
-                          _c("ul", { staticClass: "list-unstyled" }, [
-                            _c("li", [_vm._v(_vm._s(_vm.errors[0].message[0]))])
-                          ])
-                        ])
-                      : _vm._e()
+                      [_vm._v("Comment")]
+                    )
                   ]),
                   _vm._v(" "),
                   _c(
                     "div",
-                    { staticClass: "col-md-12 form-group text-right" },
+                    {
+                      staticClass: "collapse border rounded p-2 col-md-12",
+                      attrs: { id: "collapseCommentBox" + level1_index }
+                    },
                     [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-primary",
-                          attrs: { type: "button" },
-                          on: {
-                            click: function($event) {
-                              _vm.createComment(null, null, null)
+                      _c("div", { staticClass: "comment-box col-md-5" }, [
+                        _c("div", { staticClass: "col-md-12 form-group" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "col-md-4 control-label",
+                              attrs: { for: "name" }
+                            },
+                            [_vm._v("Name: ")]
+                          ),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.data["level1"][level1_index]["name"],
+                                expression:
+                                  "data['level1'][level1_index]['name']"
+                              }
+                            ],
+                            attrs: { type: "text" },
+                            domProps: {
+                              value: _vm.data["level1"][level1_index]["name"]
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.data["level1"][level1_index],
+                                  "name",
+                                  $event.target.value
+                                )
+                              }
                             }
-                          }
-                        },
-                        [_vm._v("Submit")]
-                      )
+                          }),
+                          _vm._v(" "),
+                          "i" + level1_index in _vm.errors.level1 &&
+                          _vm.errors.level1["i" + level1_index].length > 0 &&
+                          "name" in _vm.errors.level1["i" + level1_index][0] &&
+                          _vm.errors.level1["i" + level1_index][0]["name"]
+                            .length > 0
+                            ? _c("div", { staticClass: "alert alert-danger" }, [
+                                _c("ul", { staticClass: "list-unstyled" }, [
+                                  _c("li", [
+                                    _vm._v(
+                                      _vm._s(
+                                        _vm.errors.level1[
+                                          "i" + level1_index
+                                        ][0]["name"][0]
+                                      )
+                                    )
+                                  ])
+                                ])
+                              ])
+                            : _vm._e()
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-12 form-group" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "col-md-4 control-label",
+                              attrs: { for: "message" }
+                            },
+                            [_vm._v("Message: ")]
+                          ),
+                          _vm._v(" "),
+                          _c("textarea", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value:
+                                  _vm.data["level1"][level1_index]["message"],
+                                expression:
+                                  "data['level1'][level1_index]['message']"
+                              }
+                            ],
+                            domProps: {
+                              value: _vm.data["level1"][level1_index]["message"]
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.data["level1"][level1_index],
+                                  "message",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          "i" + level1_index in _vm.errors.level1 &&
+                          _vm.errors.level1["i" + level1_index].length > 0 &&
+                          "message" in
+                            _vm.errors.level1["i" + level1_index][0] &&
+                          _vm.errors.level1["i" + level1_index][0]["message"]
+                            .length > 0
+                            ? _c("div", { staticClass: "alert alert-danger" }, [
+                                _c("ul", { staticClass: "list-unstyled" }, [
+                                  _c("li", [
+                                    _vm._v(
+                                      _vm._s(
+                                        _vm.errors.level1[
+                                          "i" + level1_index
+                                        ][0]["message"][0]
+                                      )
+                                    )
+                                  ])
+                                ])
+                              ])
+                            : _vm._e()
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "col-md-12 form-group text-right" },
+                          [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-primary",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.createComment(
+                                      item.id,
+                                      "level1",
+                                      level1_index
+                                    )
+                                  }
+                                }
+                              },
+                              [_vm._v("Submit")]
+                            )
+                          ]
+                        )
+                      ])
                     ]
                   )
-                ])
+                ],
+                2
+              )
+            })
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-footer" }, [
+            _c("div", { staticClass: "comment-box col-md-5" }, [
+              _c("div", { staticClass: "col-md-12 form-group" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "col-md-4 control-label",
+                    attrs: { for: "name" }
+                  },
+                  [_vm._v("Name: ")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.comment_box.name,
+                      expression: "comment_box.name"
+                    }
+                  ],
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.comment_box.name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.comment_box, "name", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors_comment_box.length > 0 &&
+                "name" in _vm.errors_comment_box[0] &&
+                _vm.errors_comment_box[0].name.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c("ul", { staticClass: "list-unstyled" }, [
+                        _c("li", [
+                          _vm._v(_vm._s(_vm.errors_comment_box[0].name[0]))
+                        ])
+                      ])
+                    ])
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-12 form-group" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "col-md-4 control-label",
+                    attrs: { for: "message" }
+                  },
+                  [_vm._v("Message: ")]
+                ),
+                _vm._v(" "),
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.comment_box.message,
+                      expression: "comment_box.message"
+                    }
+                  ],
+                  domProps: { value: _vm.comment_box.message },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.comment_box, "message", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors_comment_box.length > 0 &&
+                "message" in _vm.errors_comment_box[0] &&
+                _vm.errors_comment_box[0].message.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c("ul", { staticClass: "list-unstyled" }, [
+                        _c("li", [
+                          _vm._v(_vm._s(_vm.errors_comment_box[0].message[0]))
+                        ])
+                      ])
+                    ])
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-12 form-group text-right" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        _vm.createComment(null, null, null)
+                      }
+                    }
+                  },
+                  [_vm._v("Submit")]
+                )
               ])
-            ],
-            2
-          )
+            ])
+          ])
         ])
       ])
     ])
